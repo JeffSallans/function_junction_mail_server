@@ -28,17 +28,11 @@ app.use(cookieParser());
 //___ Setup Routes ___
 // Define main routes
 
-var initSinglePageApp = require(path.join(__dirname, 'routes', 'initSinglePageApp'));
-app.use('/', initSinglePageApp);
+var status = require(path.join(__dirname, 'routes', 'status'));
+app.use('/status', status);
 
-var poll = require(path.join(__dirname, 'routes', 'poll'));
-app.use('/poll', poll);
-
-var rsvp = require(path.join(__dirname, 'routes', 'rsvp'));
-app.use('/rsvp', rsvp);
-
-var user = require(path.join(__dirname, 'routes', 'user'));
-app.use('/user', user);
+var sendMail = require(path.join(__dirname, 'routes', 'sendMail'));
+app.use('/mail/send', sendMail);
 
 //___ 404 ___
 // catch 404 and forward to error handler

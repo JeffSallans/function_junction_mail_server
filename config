@@ -1,7 +1,14 @@
 "use strict";
 
 var config = {
-	
+	emailSettings: {
+		//{String} - Email address the emails will be sent to
+		to: "jeffsallans@gmail.com",
+		//{String} - Text that will be appended before every subject for easy inbox filtering
+		subjectPrefix: "[FJWeb] ",
+	},
+	//{number} - How long (in seconds) the server should wait before sending the next email
+	quota: 5
 };
 
 module.exports = config;
