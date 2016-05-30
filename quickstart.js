@@ -1,4 +1,4 @@
-
+//@see https://developers.google.com/gmail/api/quickstart/nodejs
 
 var fs = require('fs');
 var readline = require('readline');

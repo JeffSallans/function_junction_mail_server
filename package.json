@@ -2,8 +2,9 @@
   "name": "function_junction_mail_server",
   "version": "1.0.0",
   "description": "A simple server for sending emails by a REST call. Uses the google API, express.js, and node.js.",
-  "main": "quickstart.js",
+  "main": "app.js",
   "scripts": {
+  	"start": "node --harmony ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeff Sallans",
