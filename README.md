@@ -40,8 +40,9 @@ $ npm start
 ## To Do
 
 - [x] Google API prototype
-- [ ] Express endpoint setup
-- [ ] Google API send email
+- [x] Express endpoint setup
+- [ ] Remove old quickstart method for calling Google API
+- [ ] Google API service account send email
 - [ ] Convert email settings to configuration driven for multiple purposes
 
 ## Contributors
