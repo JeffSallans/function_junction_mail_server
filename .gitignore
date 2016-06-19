@@ -34,3 +34,4 @@ node_modules
 
 # DO NOT COMMIT SECRETS
 client_secret.json
+service-account-key.pem
