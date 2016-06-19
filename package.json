@@ -4,7 +4,7 @@
   "description": "A simple server for sending emails by a REST call. Uses the google API, express.js, and node.js.",
   "main": "app.js",
   "scripts": {
-  	"start": "node --harmony ./bin/www",
+    "start": "node --harmony ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeff Sallans",
@@ -14,9 +14,18 @@
       "node": true
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeffSallans/function_junction_mail_server.git"
+  },
   "dependencies": {
+    "body-parser": "^1.15.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.13.4",
     "google-auth-library": "^0.9.8",
-    "googleapis": "^7.1.0"
+    "googleapis": "^7.1.0",
+    "lodash": "^4.13.1",
+    "morgan": "^1.7.0",
+    "wavy": "^1.0.2"
   }
 }

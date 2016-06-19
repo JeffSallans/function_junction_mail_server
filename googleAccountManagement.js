@@ -11,14 +11,17 @@ var googleAuth = require('google-auth-library');
 var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 		process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'gmail-nodejs-quickstart.json';
+var TOKEN_PATH = TOKEN_DIR + 'function-junction-gmail-nodejs-authentication.json';
 
-var googleServerAccount = {
+var oauth2Connection = null;
+
+var googleAccountManagement = {
 	setupConnection: setupOauthConnection,
+	getConnection: getOauthConnection,
 	example: listLabels
 };
 
-module.googleServerAccount = googleServerAccount;
+module.exports = googleAccountManagement;
 
 /**
  * Create an OAuth2 client with the given credentials
@@ -33,14 +36,22 @@ function setupOauthConnection() {
 		fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 			if (err) {
 				console.log('Error loading client secret file: ' + err);
+				reject();
 				return;
 			}
 			// Authorize a client with the loaded credentials, then call the
 			// Gmail API.
 			authorize(JSON.parse(content))
-			.then(resolve);
+			.then((newOauth2Connection) => {
+				oauth2Connection = newOauth2Connection;
+				resolve(newOauth2Connection);
+			});
 		});
 	});
+}
+
+function getOauthConnection() {
+	return oauth2Connection;
 }
 
 /**
@@ -73,14 +84,13 @@ function authorize(credentials) {
 }
 
 /**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
+ * Get and store new token after prompting for user authorization, and returns a promise of the authorized OAuth2 client.
  *
  * @param {google.auth.OAuth2} oauth2Client The OAuth2 client to get token for.
  * @returns {Promise resolves google.auth.OAuth2} A promise that resolves when the token is retrieved.
  * 
  */
-function getNewToken(oauth2Client, callback) {
+function getNewToken(oauth2Client) {
 	var authUrl = oauth2Client.generateAuthUrl({
 		access_type: 'offline',
 		scope: SCOPES
@@ -133,7 +143,7 @@ function storeToken(token) {
 function listLabels() {
 
 	setupGoogleOauthConnection()
-	.then( (auth) =>
+	.then( (auth) => {
 
 		var gmail = google.gmail('v1');
 		gmail.users.labels.list({

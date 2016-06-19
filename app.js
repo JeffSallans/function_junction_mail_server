@@ -3,11 +3,9 @@
 // Import
 const express = require('express');
 const path = require('path');
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
-// Load config for express
-const config = require(path.join(__dirname, 'config'));
 
 // Init express
 //app.use work like a waterfall, for each request each .use is called in order
@@ -31,8 +29,8 @@ app.use(cookieParser());
 var status = require(path.join(__dirname, 'routes', 'status'));
 app.use('/status', status);
 
-var sendMail = require(path.join(__dirname, 'routes', 'sendMail'));
-app.use('/mail/send', sendMail);
+//var sendMail = require(path.join(__dirname, 'routes', 'sendMail'));
+//app.use('/mail/send', sendMail);
 
 //___ 404 ___
 // catch 404 and forward to error handler
