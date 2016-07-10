@@ -63,7 +63,7 @@ function handleError(res, error) {
 		stacktrace = error;
 	}
 
-	res.send(error.status || 500, {
+	res.status(error.status || 500).send({
 		error: error.message,
 		stacktrace: stacktrace
 	});

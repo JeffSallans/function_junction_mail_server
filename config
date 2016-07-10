@@ -6,6 +6,15 @@ var config = {
 		to: "jeffsallans@gmail.com",
 		//{String} - Text that will be appended before every subject for easy inbox filtering
 		subjectPrefix: "[FJWeb] ",
+		//{String} - Path relative to project root to service account authentication file
+		apiDetailsFile: "service-account-details.json",
+		//{String} - Account to use when using 'me'
+		apiAccount: "jeffsallans@gmail.com",
+		//{Array of strings} - API scopes to access, values from https://developers.google.com/gmail/api/auth/scopes
+		apiScopes: [
+			"https://www.googleapis.com/auth/gmail.send",
+			"https://www.googleapis.com/auth/gmail.labels"
+		],
 	},
 	//{number} - How long (in seconds) the server should wait before sending the next email
 	quota: 5

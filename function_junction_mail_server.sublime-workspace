@@ -4,72 +4,101 @@
 		"selected_items":
 		[
 			[
-				"google",
-				"googleServerAccount"
+				"re",
+				"require"
 			],
 			[
-				"re",
-				"resolve"
+				"go",
+				"googleAccountConnected"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"em",
+				"emailPrefix"
+			],
+			[
+				"google",
+				"googleServerAccount"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "bin/www",
+			"settings":
+			{
+				"buffer_size": 1786,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "package.json",
 			"settings":
 			{
-				"buffer_size": 549,
+				"buffer_size": 836,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "bin/www",
+			"contents": "\"use strict\";\n//@see https://developers.google.com/gmail/api/quickstart/nodejs\n\nvar fs = require('fs');\nvar readline = require('readline');\nvar google = require('googleapis');\nvar googleAuth = require('google-auth-library');\n\n// If modifying these scopes, delete your previously saved credentials\n// at ~/.credentials/gmail-nodejs-quickstart.json\nvar SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];\nvar TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||\n		process.env.USERPROFILE) + '/.credentials/';\nvar TOKEN_PATH = TOKEN_DIR + 'function-junction-gmail-nodejs-authentication.json';\n\nvar oauth2Connection = null;\n\nvar googleAccountManagement = {\n	setupConnection: setupOauthConnection,\n	getConnection: getOauthConnection,\n	example: listLabels\n};\n\nmodule.exports = googleAccountManagement;\n\n/**\n * Create an OAuth2 client with the given credentials\n * \n * @return {Promise resolves google.auth.OAuth2}\n */\nfunction setupOauthConnection() {\n\n	return new Promise( (resolve, reject) => {\n\n		// Load client secrets from a local file.\n		fs.readFile('client_secret.json', function processClientSecrets(err, content) {\n			if (err) {\n				console.log('Error loading client secret file: ' + err);\n				reject();\n				return;\n			}\n			// Authorize a client with the loaded credentials, then call the\n			// Gmail API.\n			authorize(JSON.parse(content))\n			.then((newOauth2Connection) => {\n				oauth2Connection = newOauth2Connection;\n				resolve(newOauth2Connection);\n			});\n		});\n	});\n}\n\nfunction getOauthConnection() {\n\n	//Check if Oauth connection has been setup\n	if (oauth2Connection == null) {\n		\n	}\n\n	return oauth2Connection;\n}\n\n/**\n * Create an OAuth2 client with the given credentials.\n *\n * @param {Object} credentials The authorization client credentials.\n * @returns {Promise resolves google.auth.OAuth2} A promise that resolves when the connection is verified.\n */\nfunction authorize(credentials) {\n	var clientSecret = credentials.installed.client_secret;\n	var clientId = credentials.installed.client_id;\n	var redirectUrl = credentials.installed.redirect_uris[0];\n	var auth = new googleAuth();\n	var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);\n\n	return new Promise( (resolve, reject) => {\n\n		// Check if we have previously stored a token.\n		fs.readFile(TOKEN_PATH, function(err, token) {\n			if (err) {\n				getNewToken(oauth2Client)\n				.then(resolve);\n			}\n			else {\n				oauth2Client.credentials = JSON.parse(token);\n				resolve(oauth2Client);\n			}\n		});\n	});\n}\n\n/**\n * Get and store new token after prompting for user authorization, and returns a promise of the authorized OAuth2 client.\n *\n * @param {google.auth.OAuth2} oauth2Client The OAuth2 client to get token for.\n * @returns {Promise resolves google.auth.OAuth2} A promise that resolves when the token is retrieved.\n * \n */\nfunction getNewToken(oauth2Client) {\n	var authUrl = oauth2Client.generateAuthUrl({\n		access_type: 'offline',\n		scope: SCOPES\n	});\n	console.log('Authorize this app by visiting this url: ', authUrl);\n	var rl = readline.createInterface({\n		input: process.stdin,\n		output: process.stdout\n	});\n\n	return new Promise( (resolve, reject) => {\n\n		rl.question('Enter the code from that page here: ', function(code) {\n			rl.close();\n			oauth2Client.getToken(code, function(err, token) {\n				if (err) {\n					console.log('Error while trying to retrieve access token', err);\n					reject();\n					return;\n				}\n				oauth2Client.credentials = token;\n				storeToken(token);\n				resolve(oauth2Client);\n			});\n		});\n	});\n\n}\n\n/**\n * Store token to disk be used in later program executions.\n *\n * @param {Object} token The token to store to disk.\n */\nfunction storeToken(token) {\n	try {\n		fs.mkdirSync(TOKEN_DIR);\n	} catch (err) {\n		if (err.code != 'EEXIST') {\n			throw err;\n		}\n	}\n	fs.writeFile(TOKEN_PATH, JSON.stringify(token));\n	console.log('Token stored to ' + TOKEN_PATH);\n}\n\n/**\n * Lists the labels in the user's account.\n */\nfunction listLabels() {\n\n	setupGoogleOauthConnection()\n	.then( (auth) => {\n\n		var gmail = google.gmail('v1');\n		gmail.users.labels.list({\n			auth: auth,\n			userId: 'me',\n		}, function(err, response) {\n			if (err) {\n				console.log('The API returned an error: ' + err);\n				return;\n			}\n			var labels = response.labels;\n			if (labels.length == 0) {\n				console.log('No labels found.');\n			} else {\n				console.log('Labels:');\n				for (var i = 0; i < labels.length; i++) {\n					var label = labels[i];\n					console.log('- %s', label.name);\n				}\n			}\n		});\n	});\n}",
+			"file": "googleAccountManagement.js",
+			"file_size": 4574,
+			"file_write_time": 131108410906089414,
 			"settings":
 			{
-				"buffer_size": 1607,
+				"buffer_size": 4491,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "quickstart.js",
+			"file": "client_secret.json",
 			"settings":
 			{
-				"buffer_size": 4172,
+				"buffer_size": 432,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "service-account-details.json",
+			"settings":
+			{
+				"buffer_size": 669,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": ".gitignore",
 			"settings":
 			{
-				"buffer_size": 573,
+				"buffer_size": 597,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app.js",
-			"settings":
-			{
-				"buffer_size": 1624,
-				"line_ending": "Windows",
-				"name": "\"use strict\";"
-			}
-		},
-		{
-			"file": "config",
-			"settings":
-			{
-				"buffer_size": 383,
-				"line_ending": "Windows",
-				"name": "\"use strict\";"
 			}
 		},
 		{
 			"file": "README.md",
 			"settings":
 			{
-				"buffer_size": 1134,
+				"buffer_size": 1721,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "service-account-key.pem",
+			"settings":
+			{
+				"buffer_size": 1704,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "routes/status.js",
+			"settings":
+			{
+				"buffer_size": 805,
 				"line_ending": "Windows"
 			}
 		}
@@ -111,10 +140,20 @@
 	"expanded_folders":
 	[
 		"/C/Users/jsallans/ptl/function_junction_mail_server",
-		"/C/Users/jsallans/ptl/function_junction_mail_server/bin"
+		"/C/Users/jsallans/ptl/function_junction_mail_server/bin",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/routes"
 	],
 	"file_history":
 	[
+		"/C/Users/jsallans/ptl/function_junction_mail_server/npm-debug.log",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/package.json",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/bin/www",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/quickstart.js",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/.gitignore",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/app.js",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/routes/status.js",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/README.md",
+		"/C/Users/jsallans/ptl/function_junction_mail_server/config"
 	],
 	"find":
 	{
@@ -122,9 +161,10 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 90.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -132,14 +172,23 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\\\\n",
+			"});\n",
+			"googleServerAccount",
+			"callback",
+			"logger",
+			"debug",
+			"__dirname",
+			"config",
 			"getToken"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"\\n"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -150,54 +199,24 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 6,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "package.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 549,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								258,
-								258
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext).tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "bin/www",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1607,
+						"buffer_size": 1786,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								382,
-								382
+								663,
+								663
 							]
 						],
 						"settings":
@@ -210,89 +229,118 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "package.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 836,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								260,
+								260
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext).tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "quickstart.js",
+					"file": "googleAccountManagement.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4172,
+						"buffer_size": 4491,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								673,
-								673
+								3591,
+								3591
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
-							"tab_size": 4,
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": ".gitignore",
+					"file": "client_secret.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 573,
+						"buffer_size": 432,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								396,
-								396
+								432,
+								432
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext).tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "app.js",
+					"file": "service-account-details.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1624,
+						"buffer_size": 669,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								994,
-								952
+								161,
+								161
 							]
 						],
 						"settings":
 						{
-							"auto_name": "\"use strict\";",
-							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext).tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -303,31 +351,30 @@
 				},
 				{
 					"buffer": 5,
-					"file": "config",
+					"file": ".gitignore",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 383,
+						"buffer_size": 597,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								359,
-								365
+								596,
+								596
 							]
 						],
 						"settings":
 						{
-							"auto_name": "\"use strict\";",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -336,15 +383,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1134,
+						"buffer_size": 1721,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								647,
-								647
+								1441,
+								1441
 							]
 						],
 						"settings":
@@ -352,10 +399,66 @@
 							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
 						},
 						"translation.x": 0.0,
+						"translation.y": 15.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "service-account-key.pem",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1704,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1704,
+								1704
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext).tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "routes/status.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 805,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								427,
+								427
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -400,7 +503,7 @@
 	"project": "function_junction_mail_server.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":

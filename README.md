@@ -22,20 +22,28 @@ Follow the process at https://developers.google.com/gmail/api/quickstart/nodejs#
 3) Create .pem file (in application root directory) from service-account-details.json field "private_key".  Remove this field.
 
 4) Create a field "private_key_file" in service-account-details.json with the name of the .pem file you created.
-
-5) Navigate to project directory
+```json
+  "private_key_file": "service-account-key.pem",
 ```
+
+5) Add scope info to service-account-details.json
+```json
+  "scope": ["https://www.googleapis.com/auth/gmail.send"],
+```
+
+6) Navigate to project directory
+```bash
 //npm start defined in package.json
 //Actual command is node --harmony ./bin/www
 //Harmony flag enables staged ES6 features
 $ npm start
 ```
 
-6) Follow command line setups to authenticate with Google API
+7) Follow command line setups to authenticate with Google API
 
-7) Send REST API requests to [localhost:3000](http://localhost:3000)
+8) Send REST API requests to [localhost:3000](http://localhost:3000)
 
-8) (Optional) Test request [GET localhost:3000/status](http://localhost:3000/status)
+9) (Optional) Test request [GET localhost:3000/status](http://localhost:3000/status)
 
 ## To Do
 

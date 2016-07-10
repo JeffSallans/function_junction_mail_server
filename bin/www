@@ -6,35 +6,27 @@
 
 var app = require('../app');
 var http = require('http');
-var googleAccountManagement = require('~/googleAccountManagement');
 
-/*
-  Make sure gmail authentication is set before starting email service
+/**
+ * Get port from environment and store in Express.
  */
-googleAccountManagement.setupConnection()
-.then(() => {
 
-  /**
-   * Get port from environment and store in Express.
-   */
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
-  var port = normalizePort(process.env.PORT || '3000');
-  app.set('port', port);
+/**
+ * Create HTTP server.
+ */
 
-  /**
-   * Create HTTP server.
-   */
+var server = http.createServer(app);
 
-  var server = http.createServer(app);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
-  /**
-   * Listen on provided port, on all network interfaces.
-   */
-
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-});
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
